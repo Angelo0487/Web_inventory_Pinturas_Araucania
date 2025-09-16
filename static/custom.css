@@ -1,0 +1,4 @@
+body { padding-bottom: 40px; }
+.navbar-brand { font-weight: 700; letter-spacing: .3px; }
+.table td, .table th { vertical-align: middle; }
+.badge-soft { background: #eef2ff; border: 1px solid #c7d2fe; }

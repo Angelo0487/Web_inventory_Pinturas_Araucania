@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Reporte: Valorización del inventario</h3>
+<div class="card shadow-sm mb-3">
+    <div class="card-body d-flex gap-4">
+        <div>
+            <div class="text-muted">Total costo</div>
+            <div class="h4">${{ '%.0f'|format(total_cost) }}</div>
+        </div>
+        <div>
+            <div class="text-muted">Total venta</div>
+            <div class="h4">${{ '%.0f'|format(total_sale) }}</div>
+        </div>
+    </div>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Producto</th>
+                    <th class="text-end">Stock</th>
+                    <th class="text-end">Costo</th>
+                    <th class="text-end">Venta</th>
+                    <th class="text-end">Total costo</th>
+                    <th class="text-end">Total venta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in products %}
+                <tr>
+                    <td>{{ p.sku }}</td>
+                    <td>{{ p.name }}</td>
+                    <td class="text-end">{{ p.stock }}</td>
+                    <td class="text-end">${{ '%.0f'|format(p.cost_price) }}</td>
+                    <td class="text-end">${{ '%.0f'|format(p.sale_price) }}</td>
+                    <td class="text-end">${{ '%.0f'|format(p.stock * p.cost_price) }}</td>
+                    <td class="text-end">${{ '%.0f'|format(p.stock * p.sale_price) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">Sin productos</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

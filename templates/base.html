@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Inventario Pinturas Araucanía</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Aquí puedes agregar tus enlaces a CSS y JS -->
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="text-muted">Bajo mínimo</div>
+                        <div class="h3">{{ low_stock }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="text-muted">Valorización (costo / venta)</div>
+                        <div class="h5">
+                            ${{ '%.0f'|format(valuation_cost) }} / ${{ '%.0f'|format(valuation_sale) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Últimos movimientos</strong>
+                <a href="{{ url_for('movement_form') }}" class="btn btn-sm btn-primary">Nuevo movimiento</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Tipo</th>
+                            <th class="text-end">Cantidad</th>
+                            <th>Nota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in last_movs %}
+                        <tr>
+                            <td>{{ m.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ m.product.sku }} — {{ m.product.name }}</td>
+                            <td>
+                                {% if m.kind == 'IN' %}
+                                <span class="badge text-bg-success">Entrada</span>
+                                {% else %}
+                                <span class="badge text-bg-danger">Salida</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">{{ m.quantity }}</td>
+                            <td>{{ m.note }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Sin movimientos</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

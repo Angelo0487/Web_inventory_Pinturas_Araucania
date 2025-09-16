@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Movimientos</h3>
+    <div>
+        <a href="{{ url_for('movement_form') }}" class="btn btn-primary">Nuevo movimiento</a>
+    </div>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th class="text-end">Cantidad</th>
+                    <th>Nota</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in movs %}
+                <tr>
+                    <td>{{ m.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ m.product.sku }} — {{ m.product.name }}</td>
+                    <td>
+                        {% if m.kind == 'IN' %}
+                        <span class="badge text-bg-success">Entrada</span>
+                        {% else %}
+                        <span class="badge text-bg-danger">Salida</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">{{ m.quantity }}</td>
+                    <td>{{ m.note }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Sin movimientos</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
