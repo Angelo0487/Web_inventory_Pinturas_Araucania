@@ -6,6 +6,27 @@ from forms import MovementForm
 
 app = create_app()
 
+# ----------- RUTA PRINCIPAL -----------
+@app.route('/')
+def index():
+    # Calcula los valores requeridos
+    valuation_cost = db.session.query(db.func.sum(Product.stock * Product.cost_price)).scalar() or 0
+    valuation_sale = db.session.query(db.func.sum(Product.stock * Product.sale_price)).scalar() or 0
+    low_stock = Product.query.filter(Product.stock <= Product.min_stock).count()
+    total_products = Product.query.count()
+    total_stock = db.session.query(db.func.sum(Product.stock)).scalar() or 0
+    last_movs = Movement.query.order_by(Movement.created_at.desc()).limit(10).all()
+
+    return render_template(
+        'dashboard.html',
+        valuation_cost=valuation_cost,
+        valuation_sale=valuation_sale,
+        low_stock=low_stock,
+        total_products=total_products,
+        total_stock=total_stock,
+        last_movs=last_movs
+    )
+
 # ----------- MOVIMIENTOS -----------
 @app.route('/movement/new', methods=['GET', 'POST'])
 def movement_form():
@@ -55,4 +76,4 @@ if __name__ == '__main__':
             db.create_all()
             print('Base de datos inicializada.')
 
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5001)
