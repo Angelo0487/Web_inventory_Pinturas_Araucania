@@ -1,17 +1,34 @@
-mov = Movement(product_id=product.id, kind=kind, quantity=qty, note=form.note.data)
-db.session.add(mov)
+import argparse
+from flask import Flask, render_template, redirect, url_for, flash, request
+from database import db, create_app
+from models import Product, Movement
+from forms import MovementForm
 
-# Actualiza stock
-if kind == 'IN':
-    product.stock += qty
-else:
-    product.stock -= qty
+app = create_app()
 
-db.session.commit()
-flash('Movimiento registrado', 'success')
-return redirect(url_for('movements_list'))
+# ----------- MOVIMIENTOS -----------
+@app.route('/movement/new', methods=['GET', 'POST'])
+def movement_form():
+    form = MovementForm()
+    if form.validate_on_submit():
+        product = Product.query.get(form.product_id.data)
+        kind = form.kind.data
+        qty = form.quantity.data
 
-return render_template('movement_form.html', form=form)
+        mov = Movement(product_id=product.id, kind=kind, quantity=qty, note=form.note.data)
+        db.session.add(mov)
+
+        # Actualiza stock
+        if kind == 'IN':
+            product.stock += qty
+        else:
+            product.stock -= qty
+
+        db.session.commit()
+        flash('Movimiento registrado', 'success')
+        return redirect(url_for('movements_list'))
+
+    return render_template('movement_form.html', form=form)
 
 # ----------- REPORTES -----------
 @app.route('/reports/low-stock')
