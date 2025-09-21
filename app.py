@@ -30,6 +30,12 @@ def index():
 @app.route('/movement/new', methods=['GET', 'POST'])
 def movement_form():
     form = MovementForm()
+
+    # Cargar productos desde la BD en el SelectField
+    form.product_id.choices = [
+        (p.id, f"{p.sku} — {p.name}") for p in Product.query.order_by(Product.name).all()
+    ]
+
     if form.validate_on_submit():
         product = Product.query.get(form.product_id.data)
         kind = form.kind.data
@@ -46,9 +52,15 @@ def movement_form():
 
         db.session.commit()
         flash('Movimiento registrado', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('movements_list'))
 
     return render_template('movement_form.html', form=form)
+
+# ----------- LISTA DE MOVIMIENTOS -----------
+@app.route('/movements')
+def movements_list():
+    movs = Movement.query.order_by(Movement.created_at.desc()).all()
+    return render_template('movements_list.html', movs=movs)
 
 # ----------- REPORTES -----------
 @app.route('/reports/low-stock')

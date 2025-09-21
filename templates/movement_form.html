@@ -1,18 +1,33 @@
-{% extends 'base.html' %}
-{% block title %}
-  Nuevo movimiento
-{% endblock %}
+{% extends "base.html" %}
+{% block title %}Registrar Movimiento{% endblock %}
 
 {% block content %}
-  <h2>Registrar movimiento</h2>
-  <form method="post">
+<h2 class="mb-4">Registrar Movimiento</h2>
+
+<form method="POST">
     {{ form.hidden_tag() }}
 
-    <div>{{ form.product_id.label }} {{ form.product_id }}</div>
-    <div>{{ form.kind.label }} {{ form.kind }}</div>
-    <div>{{ form.quantity.label }} {{ form.quantity }}</div>
-    <div>{{ form.note.label }} {{ form.note }}</div>
+    <div class="mb-3">
+        {{ form.product_id.label(class="form-label") }}
+        {{ form.product_id(class="form-select") }}
+    </div>
 
-    <button type="submit">Guardar</button>
-  </form>
+    <div class="mb-3">
+        {{ form.kind.label(class="form-label") }}
+        {{ form.kind(class="form-select") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.quantity.label(class="form-label") }}
+        {{ form.quantity(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.note.label(class="form-label") }}
+        {{ form.note(class="form-control") }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{{ url_for('movements_list') }}" class="btn btn-secondary">Cancelar</a>
+</form>
 {% endblock %}
