@@ -1,5 +1,5 @@
 import argparse
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash
 from database import db, create_app
 from models import Product, Movement
 from forms import MovementForm
@@ -9,7 +9,6 @@ app = create_app()
 # ----------- RUTA PRINCIPAL -----------
 @app.route('/')
 def index():
-    # Calcula los valores requeridos
     valuation_cost = db.session.query(db.func.sum(Product.stock * Product.cost_price)).scalar() or 0
     valuation_sale = db.session.query(db.func.sum(Product.stock * Product.sale_price)).scalar() or 0
     low_stock = Product.query.filter(Product.stock <= Product.min_stock).count()
@@ -47,7 +46,7 @@ def movement_form():
 
         db.session.commit()
         flash('Movimiento registrado', 'success')
-        return redirect(url_for('movements_list'))
+        return redirect(url_for('index'))
 
     return render_template('movement_form.html', form=form)
 
@@ -59,7 +58,6 @@ def report_low_stock():
 
 @app.route('/reports/valuation')
 def report_valuation():
-    # Totales
     total_cost = db.session.query(db.func.sum(Product.stock * Product.cost_price)).scalar() or 0
     total_sale = db.session.query(db.func.sum(Product.stock * Product.sale_price)).scalar() or 0
     products = Product.query.order_by(Product.name.asc()).all()

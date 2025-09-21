@@ -1,22 +1,8 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
 {% block content %}
-<div class="row g-3">
-    <div class="col-md-3">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="text-muted">Productos</div>
-                <div class="h3">{{ total_products }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="text-muted">Unidades en stock</div>
-                <div class="h3">{{ total_stock }}</div>
-            </div>
-        </div>
-    </div>
+<div class="row">
     <div class="col-md-3">
         <div class="card shadow-sm">
             <div class="card-body">
@@ -29,7 +15,9 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <div class="text-muted">Valorización (costo / venta)</div>
-                <div class="h5">${{ '%.0f'|format(valuation_cost) }} / ${{ '%.0f'|format(valuation_sale) }}</div>
+                <div class="h5">
+                    ${{ '%.0f'|format(valuation_cost) }} / ${{ '%.0f'|format(valuation_sale) }}
+                </div>
             </div>
         </div>
     </div>
